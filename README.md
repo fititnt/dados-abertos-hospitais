@@ -8,7 +8,6 @@
 - https://w.wiki/ANuX
 - https://overpass-turbo.eu/s/1MRX
 
-
 ## Fontes de dados
 
 ### Governo

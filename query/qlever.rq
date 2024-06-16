@@ -1,0 +1,33 @@
+# instance_of=hospital (Q16917) health care facility, for individual buildings use hospital building, for organizations use medical organization
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX ps: <http://www.wikidata.org/prop/statement/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?item ?itemLabel ?countryLabel ?geometry ?in_adm ?in_admLabel ?official_website  ?inception WHERE {
+  VALUES ?instances_of {
+    wd:Q16917
+  }
+  ?item (p:P31/ps:P31/(wdt:P279*)) ?instances_of;
+    wdt:P17 ?country;
+    p:P17 ?statement1.
+  ?statement1 ps:P17 wd:Q155.  # Q155 = Brazil; Change here to select another country
+
+  # OPTIONAL { ?item wdt:P625 ?coordiate_location. }
+  OPTIONAL { ?item wdt:P625 ?geometry . }
+  # ?item wdt:P625 ?geometry .
+  # ?item geo:hasGeometry/geo:asWKT ?geometry .
+  # OPTIONAL { ?item wdt:P1001 ?jurisdiction. }
+  # OPTIONAL { ?item wdt:P2541 ?operating_area. }
+  OPTIONAL { ?item wdt:P131 ?in_adm . ?in_adm rdfs:label ?in_admLabel . FILTER (LANG(?in_admLabel) = "pt") .}
+  OPTIONAL { ?item wdt:P856 ?official_website. }
+  OPTIONAL { ?item wdt:P571 ?inception. }
+  # SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],pt,en,de,fr,ru,es,ja,zh,ar". }
+  OPTIONAL { ?item rdfs:label ?itemLabel . FILTER (LANG(?itemLabel) = "pt") . }
+  OPTIONAL { ?item rdfs:label ?itemLabel . FILTER (LANG(?itemLabel) = "en") . }
+  OPTIONAL { ?country rdfs:label ?countryLabel . FILTER (LANG(?countryLabel) = "pt") . }
+}
+ORDER BY (?countryLabel) (?in_admLabel)
+# LIMIT 50000
